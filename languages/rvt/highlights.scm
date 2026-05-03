@@ -39,14 +39,6 @@
 (string) @string
 (number) @number
 
-(allocate_expression
-  type: (qualified_allocate_type
-    scope: (identifier) @variable.special
-    member_type: (identifier) @type.builtin))
-
-(allocate_expression
-  type: (identifier) @type.builtin)
-
 (function_definition
   name: (identifier) @function)
 

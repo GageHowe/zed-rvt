@@ -8,7 +8,7 @@ repository = "https://github.com/GageHowe/zed-rvt"
 
 [grammars.rvt]
 repository = "file:///home/zenith/github/zed-rvt"
-commit = "b24f6870a79f8e999ef54adbd711c2426b09c79f"
+commit = "fe2fc10a3ac159970ad4f7252047c2314601cb2a"
 
 [language_servers.rvt_lsp]
 name = "RVT Language Server"

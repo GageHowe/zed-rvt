@@ -35,11 +35,6 @@ const InsertTextFormat = {
   Snippet: 2,
 };
 
-const MarkupKind = {
-  Markdown: "markdown",
-  PlainText: "plaintext",
-};
-
 const objectTypeChoices =
   "<type>,spartan,elite,monitor,flag,bomb,skull,hill_marker,flag_stand,capture_plate,frag_grenade,plasma_grenade,dmr,assault_rifle,plasma_pistol,spiker,needle_rifle,plasma_repeater,energy_sword,magnum,needler,plasma_rifle,rocket_launcher,shotgun,sniper_rifle,beam_rifle,spartan_laser,gravity_hammer,warthog,ghost,scorpion,wraith,banshee,mongoose,falcon,sabre,sprint,jetpack,armor_lock,active_camo_aa,revenant,pickup_truck,focus_rifle,respawn_zone,plasma_launcher,fusion_coil,initial_spawn_point,health_pack,fireteam_1_respawn_zone,fireteam_2_respawn_zone,fireteam_3_respawn_zone,semi_truck,soccer_ball,golf_ball,golf_club,golf_cup,dice,concussion_rifle,grenade_launcher,phantom_approach,hologram,evade,unsc_data_core,danger_zone,data_core_beam,longsword,particle_emitter_fire,phantom_scenery,pelican_scenery,covenant_drop_pod,respawn_zone_weak,respawn_zone_weak_anti,phantom_device,resupply_capsule,initial_loadout_camera,invisible_covenant_resupply_capsule,covenant_power_core,fuel_rod_gun,drop_shield,detached_machine_gun_turret,machine_gun_turret,detached_plasma_cannon,plasma_cannon,shade,electric_cart,forklift,oni_van,warthog_turret,warthog_turret_gauss,warthog_turret_rocket,scorpion_turret_anti_infantry,falcon_turret_grenade_left,falcon_turret_grenade_right,wraith_turret_anti_infantry,landmine,target_locator,block_1x1_flat,shade_gun_anti_air,shade_gun_fuel_rod,shade_gun_plasma,kill_ball,light_red,light_blue,light_green,light_orange,light_purple,light_yellow,light_white,light_red_flashing,light_yellow_flashing,fx_colorblind,fx_gloomy,fx_juicy,fx_nova,fx_olde_timey,fx_pen_and_ink,fx_purple,fx_orange,fx_green,grid,sound_emitter_alarm_1,sound_emitter_alarm_2,safe_boundary,soft_safe_boundary,kill_boundary,soft_kill_boundary,unsc_data_core_holder,covenant_power_module_stand,covenant_bomb,heavy_barrier,breakpoint_bomb_door";
 const objectVariantChoices =
@@ -340,6 +335,7 @@ const memberTables = new Map([
   ["widget", widgetMembers],
 ]);
 
+
 const triggers = ["."]; 
 
 let buffer = "";
@@ -380,7 +376,6 @@ function handle(message) {
           resolveProvider: false,
           triggerCharacters: triggers,
         },
-        hoverProvider: true,
       },
       serverInfo: {
         name: "rvt-language-server",
@@ -433,11 +428,6 @@ function handle(message) {
     return;
   }
 
-  if (message.method === "textDocument/hover") {
-    reply(message.id, hover(message.params));
-    return;
-  }
-
   if (message.id != null) {
     reply(message.id, null);
   }
@@ -461,34 +451,6 @@ function complete(params) {
   if (memberType === "widget") return widgetMembers;
 
   return blockCompletions;
-}
-
-function hover(params) {
-  const text = documents.get(params.textDocument.uri) || "";
-  const lines = text.split(/\r?\n/);
-  const line = lines[params.position.line] || "";
-  const aliasTypes = collectAliasTypes(text);
-  const member = getMemberContextAt(line, params.position.character, aliasTypes);
-  if (member) {
-    const entry = getCompletionEntry(member.type, member.name);
-    if (!entry) return null;
-    return {
-      contents: {
-        kind: MarkupKind.Markdown,
-        value: renderDocumentation(entry, member.type),
-      },
-    };
-  }
-
-  const word = wordAt(line, params.position.character);
-  const topLevel = blockCompletions.find((entry) => entry.label === word);
-  if (!topLevel) return null;
-  return {
-    contents: {
-      kind: MarkupKind.Markdown,
-      value: renderDocumentation(topLevel),
-    },
-  };
 }
 
 function collectAliasTypes(text) {
@@ -518,7 +480,6 @@ function inferMemberTargetType(prefix, aliasTypes) {
   const match = prefix.match(/([a-z_][\w]*|\w+\[\d+\])\.$/i);
   if (!match) return null;
   const target = match[1].toLowerCase();
-
   if (
     target === "object" ||
     target === "biped" ||
@@ -554,68 +515,18 @@ function inferMemberTargetType(prefix, aliasTypes) {
   return aliasTypes.get(target) || null;
 }
 
-function getCompletionEntry(type, name) {
-  return memberTables.get(type)?.find((entry) => entry.label === name) || null;
-}
-
-function getMemberContextAt(line, character, aliasTypes) {
-  const prefix = line.slice(0, character);
-  const match = prefix.match(/([a-z_][\w]*|\w+\[\d+\])\.([a-z_][\w]*)?$/i);
-  if (!match) return null;
-  const targetType = inferMemberTargetType(`${match[1]}.`, aliasTypes);
-  if (!targetType || !match[2]) return null;
-  return { type: targetType, name: match[2] };
-}
-
-function wordAt(line, character) {
-  const clamped = Math.max(0, Math.min(character, line.length));
-  const left = line.slice(0, clamped);
-  const right = line.slice(clamped);
-  const leftMatch = left.match(/[A-Za-z_][A-Za-z0-9_]*$/);
-  const rightMatch = right.match(/^[A-Za-z0-9_]*/);
-  if (!leftMatch) return "";
-  return leftMatch[0] + (rightMatch ? rightMatch[0] : "");
-}
-
-function renderDocumentation(entry, namespace = null) {
-  const lines = [`\`${entry.label}\``];
-  if (namespace) lines.push(`Namespace: \`${namespace}\``);
-  if (entry.detail) lines.push(entry.detail);
-  const doc = extractDoc(entry.documentation);
-  if (doc) lines.push(doc);
-  return lines.join("\n\n");
-}
-
-function extractDoc(documentation) {
-  if (!documentation) return "";
-  if (typeof documentation === "string") return documentation;
-  return documentation.value || "";
-}
-
-function item(label, kind = CompletionItemKind.Text, documentation = "") {
+function item(label, kind = CompletionItemKind.Text) {
   const result = { label, kind };
-  if (documentation) {
-    result.documentation = {
-      kind: MarkupKind.Markdown,
-      value: documentation,
-    };
-  }
   return result;
 }
 
-function snippet(label, insertText, kind = CompletionItemKind.Snippet, documentation = "") {
+function snippet(label, insertText, kind = CompletionItemKind.Snippet) {
   const result = {
     label,
     kind,
     insertText,
     insertTextFormat: InsertTextFormat.Snippet,
   };
-  if (documentation) {
-    result.documentation = {
-      kind: MarkupKind.Markdown,
-      value: documentation,
-    };
-  }
   return result;
 }
 

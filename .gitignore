@@ -1,5 +1,7 @@
 node_modules/
 target/
+extension.wasm
+grammars/
 
 *.so
 *.dylib

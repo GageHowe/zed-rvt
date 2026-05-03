@@ -1,0 +1,11 @@
+name = "Reach Variant Tool"
+grammar = "rvt"
+path_suffixes = ["rvt"]
+line_comments = ["-- "]
+autoclose_before = "])},.:;=> \n\t"
+brackets = [
+  { start = "(", end = ")", close = true, newline = false },
+  { start = "[", end = "]", close = true, newline = false },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] }
+]
+tab_size = 3

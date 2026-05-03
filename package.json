@@ -1,0 +1,13 @@
+{
+  "name": "zed-rvt",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tree-sitter grammar and local tooling for the Zed Reach Variant Tool extension.",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.4"
+  }
+}

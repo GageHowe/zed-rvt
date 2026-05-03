@@ -1,0 +1,30 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "rvt",
+      "camelcase": "Rvt",
+      "title": "Reach Variant Tool",
+      "scope": "source.rvt",
+      "path": ".",
+      "file-types": ["rvt"],
+      "highlights": "languages/rvt/highlights.scm",
+      "tags": "languages/rvt/outline.scm",
+      "injection-regex": "^(rvt|reachvarianttool)$",
+      "class-name": "TreeSitterRvt"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "GPL-3.0-only",
+    "description": "Tree-sitter grammar for Reach Variant Tool scripts.",
+    "authors": [
+      {
+        "name": "OpenAI Codex"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/your-name/zed-rvt"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+id = "rvt"
+name = "Reach Variant Tool"
+version = "0.1.0"
+schema_version = 1
+authors = ["Gage Howe"]
+description = "Syntax highlighting and completions for Reach Variant Tool scripts."
+repository = "https://github.com/GageHowe/zed-rvt"
+
+[grammars.rvt]
+repository = "file:///home/zenith/github/zed-rvt"
+commit = "HEAD"
+
+[language_servers.rvt_lsp]
+name = "RVT Language Server"
+language = "Reach Variant Tool"

@@ -1,0 +1,37 @@
+==================================
+Basic Script Structure
+==================================
+
+on init: do
+   if game.score_to_win == 0 then
+      current_player.set_round_card_title("Test")
+   alt
+      global.number[0] = 1
+   end
+end
+
+---
+
+(source_file
+  (on_statement
+    (if_statement
+      (binary_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (number))
+      (expression_statement
+        (call_expression
+          (member_expression
+            (identifier)
+            (identifier))
+          (string)))
+      (alt_clause
+        (expression_statement
+          (binary_expression
+            (subscript_expression
+              (member_expression
+                (identifier)
+                (identifier))
+              (number))
+            (number)))))))

@@ -7,8 +7,8 @@ description = "Syntax highlighting and completions for Reach Variant Tool script
 repository = "https://github.com/GageHowe/zed-rvt"
 
 [grammars.rvt]
-repository = "https://github.com/GageHowe/zed-rvt"
-commit = "294f749"
+repository = "file:///home/zenith/github/zed-rvt"
+commit = "b24f6870a79f8e999ef54adbd711c2426b09c79f"
 
 [language_servers.rvt_lsp]
 name = "RVT Language Server"

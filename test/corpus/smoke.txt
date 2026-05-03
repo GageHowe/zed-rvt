@@ -35,3 +35,118 @@ end
                 (identifier))
               (number))
             (number)))))))
+
+==================================
+Aliases, Widgets, And Allocate
+==================================
+
+alias bus = current_object
+alias ui = script_widget[0]
+alias tmp = allocate temporary object
+
+for each object with label 0 do
+   ui.set_visibility(current_player, true)
+   bus.place_at_me(spartan, "spawn", none, 0, 0, 0, default)
+end
+
+---
+
+(source_file
+  (alias_statement
+    (identifier)
+    (identifier))
+  (alias_statement
+    (identifier)
+    (subscript_expression
+      (identifier)
+      (number)))
+  (alias_statement
+    (identifier)
+    (allocate_expression
+      (allocate_type)))
+  (for_each_statement
+    (number)
+    (expression_statement
+      (call_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (identifier)
+        (boolean)))
+    (expression_statement
+      (call_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (identifier)
+        (string)
+        (boolean)
+        (number)
+        (number)
+        (number)
+        (identifier)))))
+
+==================================
+Declarations, Priority, And Flags
+==================================
+
+--[[
+Teleport setup
+]]
+declare global.number[3] with network priority local
+declare player.announced_game_start with network priority low
+declare object.zone with network priority high = no_object
+
+if current_object.zone == no_object then
+   current_object.zone = current_object.place_at_me(hill_marker, none, never_garbage_collect | suppress_effect, 0, 0, 0, none)
+end
+
+---
+
+(source_file
+  (block_comment)
+  (declaration_statement
+    (declaration_target
+      (subscript_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (number)))
+    (network_priority_clause))
+  (declaration_statement
+    (declaration_target
+      (member_expression
+        (identifier)
+        (identifier)))
+    (network_priority_clause))
+  (declaration_statement
+    (declaration_target
+      (member_expression
+        (identifier)
+        (identifier)))
+    (network_priority_clause)
+    (identifier))
+  (if_statement
+    (binary_expression
+      (member_expression
+        (identifier)
+        (identifier))
+      (identifier))
+    (expression_statement
+      (binary_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (call_expression
+          (member_expression
+            (identifier)
+            (identifier))
+          (identifier)
+          (boolean)
+          (binary_expression
+            (identifier)
+            (identifier))
+          (number)
+          (number)
+          (number)
+          (boolean))))))

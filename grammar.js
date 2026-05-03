@@ -18,7 +18,6 @@ module.exports = grammar({
         $.inline_statement,
         $.declaration_statement,
         $.alias_statement,
-        $.allocate_statement,
         $.expression_statement,
       ),
 
@@ -41,7 +40,7 @@ module.exports = grammar({
         "for",
         choice(
           seq("each", "player", optional("randomly")),
-          seq("each", "object", optional(seq("with", "label", $.string))),
+          seq("each", "object", optional(seq("with", "label", field("label", $._expression)))),
           seq("each", "team"),
         ),
         "do",
@@ -92,19 +91,13 @@ module.exports = grammar({
     declaration_statement: ($) =>
       seq(
         "declare",
-        field("name", $.identifier),
+        field("name", $.declaration_target),
+        optional($.network_priority_clause),
         optional(seq("=", field("value", $._expression))),
       ),
 
     alias_statement: ($) =>
       seq("alias", field("name", $.identifier), "=", field("value", $._expression)),
-
-    allocate_statement: ($) =>
-      seq(
-        "allocate",
-        optional("temporary"),
-        field("type", choice("number", "object", "player", "team", "timer")),
-      ),
 
     expression_statement: ($) => $._expression,
 
@@ -112,6 +105,7 @@ module.exports = grammar({
       choice(
         $.binary_expression,
         $.unary_expression,
+        $.allocate_expression,
         $.call_expression,
         $.member_expression,
         $.subscript_expression,
@@ -123,7 +117,33 @@ module.exports = grammar({
 
     parenthesized_expression: ($) => seq("(", $._expression, ")"),
 
+    declaration_target: ($) =>
+      choice($.identifier, $.member_expression, $.subscript_expression),
+
+    network_priority_clause: () =>
+      seq("with", "network", "priority", choice("local", "low", "high")),
+
     unary_expression: ($) => prec.right(9, seq(choice("not", "-", "!"), $._expression)),
+
+    allocate_expression: ($) =>
+      seq("allocate", optional("temporary"), field("type", $.allocate_type)),
+
+    allocate_type: ($) =>
+      choice(
+        "number",
+        "object",
+        "player",
+        "team",
+        "timer",
+        $.qualified_allocate_type,
+      ),
+
+    qualified_allocate_type: ($) =>
+      seq(
+        field("scope", choice("global", "object", "player", "team")),
+        ".",
+        field("member_type", choice("number", "object", "player", "team", "timer")),
+      ),
 
     binary_expression: ($) =>
       choice(
@@ -137,6 +157,9 @@ module.exports = grammar({
           [">", 4],
           ["<=", 4],
           [">=", 4],
+          ["|", 4],
+          ["&", 4],
+          ["^", 4],
           ["+", 5],
           ["-", 5],
           ["*", 6],
@@ -197,7 +220,7 @@ module.exports = grammar({
     boolean: () => choice("true", "false", "none"),
 
     line_comment: () => token(seq("--", /.*/)),
-    block_comment: () => token(seq("--[[", /[^\r\n]*/, "]]")),
+    block_comment: () => token(prec(1, /--\[\[[\s\S]*?\]\]/)),
   },
 });
 

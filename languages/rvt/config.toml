@@ -4,8 +4,12 @@ path_suffixes = ["rvt"]
 line_comments = ["-- "]
 autoclose_before = "])},.:;=> \n\t"
 brackets = [
+  { start = " do", end = " end", close = true, newline = true },
+  { start = " then", end = " end", close = true, newline = true },
   { start = "(", end = ")", close = true, newline = false },
   { start = "[", end = "]", close = true, newline = false },
   { start = "\"", end = "\"", close = true, newline = false, not_in = ["string"] }
 ]
 tab_size = 3
+increase_indent_pattern = "^\\s*(on\\s+[^:]+:\\s*do|for\\s+each\\b.*\\bdo|if\\b.*\\bthen|altif\\b.*\\bthen|alt\\b|inline:\\s*(do|if|altif|alt)|function\\b|enum\\b)\\s*$"
+decrease_indent_pattern = "^\\s*(end|altif\\b|alt\\b)\\s*$"

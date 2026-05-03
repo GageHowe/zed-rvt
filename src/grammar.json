@@ -47,10 +47,6 @@
         },
         {
           "type": "SYMBOL",
-          "name": "allocate_statement"
-        },
-        {
-          "type": "SYMBOL",
           "name": "expression_statement"
         }
       ]
@@ -213,8 +209,12 @@
                           "value": "label"
                         },
                         {
-                          "type": "SYMBOL",
-                          "name": "string"
+                          "type": "FIELD",
+                          "name": "label",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "_expression"
+                          }
                         }
                       ]
                     },
@@ -474,8 +474,20 @@
           "name": "name",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "declaration_target"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "network_priority_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -533,56 +545,6 @@
         }
       ]
     },
-    "allocate_statement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "allocate"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "temporary"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "FIELD",
-          "name": "type",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "number"
-              },
-              {
-                "type": "STRING",
-                "value": "object"
-              },
-              {
-                "type": "STRING",
-                "value": "player"
-              },
-              {
-                "type": "STRING",
-                "value": "team"
-              },
-              {
-                "type": "STRING",
-                "value": "timer"
-              }
-            ]
-          }
-        }
-      ]
-    },
     "expression_statement": {
       "type": "SYMBOL",
       "name": "_expression"
@@ -597,6 +559,10 @@
         {
           "type": "SYMBOL",
           "name": "unary_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "allocate_expression"
         },
         {
           "type": "SYMBOL",
@@ -658,6 +624,57 @@
         }
       ]
     },
+    "declaration_target": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "member_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "subscript_expression"
+        }
+      ]
+    },
+    "network_priority_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "with"
+        },
+        {
+          "type": "STRING",
+          "value": "network"
+        },
+        {
+          "type": "STRING",
+          "value": "priority"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "local"
+            },
+            {
+              "type": "STRING",
+              "value": "low"
+            },
+            {
+              "type": "STRING",
+              "value": "high"
+            }
+          ]
+        }
+      ]
+    },
     "unary_expression": {
       "type": "PREC_RIGHT",
       "value": 9,
@@ -687,6 +704,127 @@
           }
         ]
       }
+    },
+    "allocate_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "allocate"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "temporary"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "type",
+          "content": {
+            "type": "SYMBOL",
+            "name": "allocate_type"
+          }
+        }
+      ]
+    },
+    "allocate_type": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "number"
+        },
+        {
+          "type": "STRING",
+          "value": "object"
+        },
+        {
+          "type": "STRING",
+          "value": "player"
+        },
+        {
+          "type": "STRING",
+          "value": "team"
+        },
+        {
+          "type": "STRING",
+          "value": "timer"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "qualified_allocate_type"
+        }
+      ]
+    },
+    "qualified_allocate_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "scope",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "global"
+              },
+              {
+                "type": "STRING",
+                "value": "object"
+              },
+              {
+                "type": "STRING",
+                "value": "player"
+              },
+              {
+                "type": "STRING",
+                "value": "team"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "member_type",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "number"
+              },
+              {
+                "type": "STRING",
+                "value": "object"
+              },
+              {
+                "type": "STRING",
+                "value": "player"
+              },
+              {
+                "type": "STRING",
+                "value": "team"
+              },
+              {
+                "type": "STRING",
+                "value": "timer"
+              }
+            ]
+          }
+        }
+      ]
     },
     "binary_expression": {
       "type": "CHOICE",
@@ -975,6 +1113,105 @@
                 "content": {
                   "type": "STRING",
                   "value": ">="
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "right",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC_LEFT",
+          "value": 4,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "left",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "operator",
+                "content": {
+                  "type": "STRING",
+                  "value": "|"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "right",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC_LEFT",
+          "value": 4,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "left",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "operator",
+                "content": {
+                  "type": "STRING",
+                  "value": "&"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "right",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC_LEFT",
+          "value": 4,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "left",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "operator",
+                "content": {
+                  "type": "STRING",
+                  "value": "^"
                 }
               },
               {
@@ -1398,21 +1635,12 @@
     "block_comment": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "--[["
-          },
-          {
-            "type": "PATTERN",
-            "value": "[^\\r\\n]*"
-          },
-          {
-            "type": "STRING",
-            "value": "]]"
-          }
-        ]
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "--\\[\\[[\\s\\S]*?\\]\\]"
+        }
       }
     }
   },

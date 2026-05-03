@@ -27,7 +27,5 @@ node --check src/server.js
 
 ## Publish notes
 
-- `extension.toml` currently uses a local grammar source:
-  `repository = "file:///home/zenith/github/zed-rvt"`
-- For publication, switch `[grammars.rvt]` to the GitHub repository URL and pin `commit` to a real commit SHA that contains the generated parser and queries.
+- `extension.toml` is pinned to the first publishable grammar commit. When the grammar changes, update `[grammars.rvt].commit` to the new commit SHA before releasing.
 - To publish on Zed, push this repository to GitHub and then open a PR against `zed-industries/extensions` adding it as a submodule and registering the version in that repository's `extensions.toml`.

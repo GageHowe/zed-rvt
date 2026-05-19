@@ -20,11 +20,11 @@
     "description": "Tree-sitter grammar for Reach Variant Tool scripts.",
     "authors": [
       {
-        "name": "OpenAI Codex"
+        "name": "Gage Howe"
       }
     ],
     "links": {
-      "repository": "https://github.com/your-name/zed-rvt"
+      "repository": "https://github.com/GageHowe/zed-rvt"
     }
   }
 }

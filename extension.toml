@@ -3,13 +3,9 @@ name = "Reach Variant Tool"
 version = "0.1.0"
 schema_version = 1
 authors = ["Gage Howe"]
-description = "Syntax highlighting and completions for Reach Variant Tool scripts."
+description = "Syntax highlighting, indentation, outline support, and snippets for Reach Variant Tool scripts."
 repository = "https://github.com/GageHowe/zed-rvt"
 
 [grammars.rvt]
-repository = "file:///home/zenith/github/zed-rvt"
-commit = "a715caea10b4ed9afc7b410de687f9bae50d1e1e"
-
-[language_servers.rvt_lsp]
-name = "RVT Language Server"
-language = "Reach Variant Tool"
+repository = "https://github.com/GageHowe/zed-rvt"
+commit = "c5fb53bfaef5d72483d56cf7361254fc1a5bee54"
